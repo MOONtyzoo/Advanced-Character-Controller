@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Advanced Character Controller.sln"
+    "dotnet.defaultSolution": "Advanced-Character-Controller.sln"
 }
