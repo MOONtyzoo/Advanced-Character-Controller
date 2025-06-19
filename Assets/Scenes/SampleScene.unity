@@ -13573,7 +13573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1956647723}
   desiredHeight: -1.17
-  trackingSpeed: 7
+  trackingSpeed: 10.5
 --- !u!1 &519877965
 GameObject:
   m_ObjectHideFlags: 0
@@ -15553,7 +15553,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 4.65
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a41a392667ea5b748b486f7879206618, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -15576,8 +15576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e9ec4f3a9926a4fb6d749056981b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 7
-  runAccel: 2
+  runSpeed: 6
+  runAccel: 40
   jumpVelocity: 18
   terrainLayerMask:
     serializedVersion: 2
