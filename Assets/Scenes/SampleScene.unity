@@ -13571,6 +13571,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b7175bf88d6bbc4ab374ad9ed8af9b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 1956647723}
+  desiredHeight: -1.17
+  trackingSpeed: 7
 --- !u!1 &519877965
 GameObject:
   m_ObjectHideFlags: 0
@@ -14607,6 +14610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1499501745}
   - component: {fileID: 1499501744}
+  - component: {fileID: 1499501746}
   m_Layer: 0
   m_Name: ParallaxBackground
   m_TagString: Untagged
@@ -14644,6 +14648,27 @@ Transform:
   - {fileID: 1472533592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1499501746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499501743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e5dbc0bdf50e64995aa203823181b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 519420031}
+  offset: {x: 0, y: 1.17}
+  parallaxLayers:
+  - gameObject: {fileID: 171115087}
+    scrollFactor: {x: 0.1, y: 0}
+  - gameObject: {fileID: 668630328}
+    scrollFactor: {x: 0.35, y: 0}
+  - gameObject: {fileID: 1472533591}
+    scrollFactor: {x: 0.8, y: 0}
 --- !u!1 &1529496703
 GameObject:
   m_ObjectHideFlags: 0
