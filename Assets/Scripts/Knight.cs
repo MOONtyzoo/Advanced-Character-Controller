@@ -12,7 +12,10 @@ public class Knight : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
+    private bool isIdle = false;
     private bool isGrounded = false;
+    private bool isFalling = false;
+    private bool isTurning = false;
 
     private void Awake()
     {
@@ -30,35 +33,22 @@ public class Knight : MonoBehaviour
         float accelFactor = Mathf.Sign(horizontalInput) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
         rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * runSpeed, accelFactor * runAccel * Time.deltaTime);
 
+        isIdle = horizontalInput == 0.0f;
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask);
+        isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
 
-        if (isGrounded && jumpInput > 0)
+        if (isGrounded && jumpInput > 0.0f)
         {
             rbody.linearVelocityY = jumpVelocity;
+            animator.SetTrigger("jump");
         }
 
-        spriteRenderer.flipX = rbody.linearVelocityX == 0.0f ? spriteRenderer.flipX : rbody.linearVelocityX > 0.0f ? false : true;
-        if (isGrounded)
-        {
-            if (rbody.linearVelocityX == 0.0f)
-            {
-                animator.Play("Idle");
-            }
-            else
-            {
-                animator.Play("Run");
-            }
-        }
-        else
-        {
-            if (rbody.linearVelocityY > 0.0f)
-            {
-                animator.Play("Jump");
-            }
-            else
-            {
-                animator.Play("Fall");
-            }
-        }
+        animator.SetFloat("run speed", Mathf.Abs(rbody.linearVelocityX));
+        animator.SetBool("is falling", isFalling);
+        animator.SetBool("is idle", isIdle);
+        animator.SetBool("is grounded", isGrounded);
+
+        isTurning = isGrounded && horizontalInput != 0.0f && ((horizontalInput < 0.0f) != spriteRenderer.flipX);
+        animator.SetBool("is turning", isTurning);
     }
 }
