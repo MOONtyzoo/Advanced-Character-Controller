@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -110,89 +110,221 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: _Attack_0
+      name: _AttackComboNoMovement_0
       rect:
         serializedVersion: 2
-        x: 35
+        x: 0
         y: 0
-        width: 41
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1b5bd03dfb0944b20800000000000000
-      internalID: 3117775995601270193
+      spriteID: bd69680ae5538d04688d61563a799730
+      internalID: -50970004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: _Attack_1
+      name: _AttackComboNoMovement_1
       rect:
         serializedVersion: 2
-        x: 170
+        x: 120
         y: 0
-        width: 68
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6d09a843d2566f070800000000000000
-      internalID: 8139804621348180182
+      spriteID: 80bec2e01ad08914c969115d090e73a9
+      internalID: 995485189
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: _Attack_2
+      name: _AttackComboNoMovement_2
       rect:
         serializedVersion: 2
-        x: 292
+        x: 240
         y: 0
-        width: 67
-        height: 37
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: bf3f5b1f75ea76ec0800000000000000
-      internalID: -3573696086554577925
+      spriteID: 3ace490283cab9f4ca57beedce617403
+      internalID: -721429185
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: _Attack_3
+      name: _AttackComboNoMovement_3
       rect:
         serializedVersion: 2
-        x: 412
+        x: 360
         y: 0
-        width: 61
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f5a4c366d9ee453a0800000000000000
-      internalID: -6677449987691099553
+      spriteID: e081556d898cfe347b84a41039c4878b
+      internalID: 164122750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_4
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4bf07fd7ddb5fe478f8af84baa80a35
+      internalID: 2116238616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_5
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5000dbfe3cda0c64da1520ef13541f85
+      internalID: -633324806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_6
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95c6889784459d949ab8bda16d70dddb
+      internalID: 767052822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_7
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a11bb428f05f3e47be4e2472113df70
+      internalID: -361386039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_8
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c10db04e38c06040b942a64f9af99ba
+      internalID: 488431433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _AttackComboNoMovement_9
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 0
+        width: 120
+        height: 80
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41c49429703050a438f6c5bed98ddb47
+      internalID: 51500617
       vertices: []
       indices: 
       edges: []
@@ -211,10 +343,16 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      _Attack_0: 3117775995601270193
-      _Attack_1: 8139804621348180182
-      _Attack_2: -3573696086554577925
-      _Attack_3: -6677449987691099553
+      _AttackComboNoMovement_0: -50970004
+      _AttackComboNoMovement_1: 995485189
+      _AttackComboNoMovement_2: -721429185
+      _AttackComboNoMovement_3: 164122750
+      _AttackComboNoMovement_4: 2116238616
+      _AttackComboNoMovement_5: -633324806
+      _AttackComboNoMovement_6: 767052822
+      _AttackComboNoMovement_7: -361386039
+      _AttackComboNoMovement_8: 488431433
+      _AttackComboNoMovement_9: 51500617
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
