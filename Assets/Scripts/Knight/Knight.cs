@@ -3,37 +3,72 @@ using UnityEngine;
 
 public class Knight : MonoBehaviour
 {
-    [SerializeField] private float runSpeed;
-    [SerializeField] private float runAccel;
+    [SerializeField] public float runSpeed;
+    [SerializeField] public float runAccel;
     [SerializeField] private float jumpVelocity;
-    [SerializeField] private float crouchSpeed;
-    [SerializeField] private float crouchAccel;
+    [SerializeField] public float crouchSpeed;
+    [SerializeField] public float crouchAccel;
     [SerializeField] private LayerMask terrainLayerMask;
 
     private Rigidbody2D rbody;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    private float horizontalInput;
-    private float verticalInput;
-    private float jumpInput;
+    private StateMachine<StateKey, Knight> stateMachine;
+    public enum StateKey
+    {
+        Idle, Run, Crouch, Roll, Slide,
+
+        Aerial, AirDive,
+        WallSlide, LedgeHang, LedgeVault,
+
+        AttackCombo, AttackCrouch,
+
+        Hurt, Die
+    }
+
+    public float horizontalInput;
+    public float verticalInput;
+    public float jumpInput;
 
     private bool isGrounded = false;
     private bool isFalling = false;
-    private bool isTurning = false;
-    private bool isCrouching = false;
 
     private void Awake()
     {
         rbody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+
+        SetUpStateMachine();
+    }
+
+    private void SetUpStateMachine()
+    {
+        stateMachine = new StateMachine<StateKey, Knight>();
+
+        BaseState<StateKey, Knight> idleState = new PlayerStates.Idle(this);
+        BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
+        BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
+        BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
+
+        stateMachine.AddState(StateKey.Idle, idleState);
+        stateMachine.AddState(StateKey.Run, runState);
+        stateMachine.AddState(StateKey.Crouch, crouchState);
+        stateMachine.AddState(StateKey.Aerial, aerialState);
+
+        stateMachine.Begin(StateKey.Idle);
     }
 
     private void Update()
     {
         GatherInput();
-        MovementLogic();
+
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask);
+        isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
+
+        stateMachine.Update();
+
         UpdateAnimator();
     }
 
@@ -44,62 +79,40 @@ public class Knight : MonoBehaviour
         jumpInput = Input.GetAxis("Jump");
     }
 
-    private void MovementLogic()
-    {
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask);
-        isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
-        isCrouching = verticalInput < 0.0f;
-        TurningLogic();
-       
-        // Faster acceleration if trying to turn in opposite direction or stopping
-        float accelFactor = Mathf.Sign(horizontalInput) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
-        if (!isCrouching)
-        {
-            rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * runSpeed, accelFactor * runAccel * Time.deltaTime);
-        }
-        else
-        {
-            rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * crouchSpeed, accelFactor * crouchAccel * Time.deltaTime);
-        }
-
-        if (isGrounded && jumpInput > 0.0f)
-        {
-            rbody.linearVelocityY = jumpVelocity;
-            animator.SetTrigger("jump");
-        }
-    }
-
-    private void TurningLogic()
-    {
-        bool facingLeft = spriteRenderer.flipX;
-        bool wantsToTurn = (horizontalInput < 0.0f && !facingLeft)
-            || (horizontalInput > 0.0f && facingLeft);
-        bool canTurn = isGrounded;
-
-        if (wantsToTurn && canTurn)
-        {
-            // Determine what type of turn
-            if (Mathf.Abs(rbody.linearVelocityX) > 2.0f)
-            {
-                // Triggers a turn animation in animator (flips sprite on completion)
-                isTurning = true;
-            }
-            else
-            {
-                // Performs an instant, in-place turn
-                if (!isTurning) spriteRenderer.flipX = !spriteRenderer.flipX;
-            }
-        }
-        
-        if (!wantsToTurn) { isTurning = false; }
-    }
-
     private void UpdateAnimator()
     {
         animator.SetFloat("speed", Mathf.Abs(rbody.linearVelocityX));
         animator.SetBool("is falling", isFalling);
         animator.SetBool("is grounded", isGrounded);
-        animator.SetBool("is turning", isTurning);
-        animator.SetBool("is crouching", isCrouching);
     }
+
+    public void MoveTowards(float targetVelocityX, float acceleration)
+    {
+        // Faster acceleration if trying to turn in opposite direction or stopping
+        float accelFactor = Mathf.Sign(horizontalInput) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
+        rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, targetVelocityX, accelFactor * acceleration * Time.deltaTime);
+    }
+
+    public void Jump()
+    {
+        rbody.linearVelocityY = jumpVelocity;
+        animator.SetTrigger("jump");
+    }
+
+    public Animator GetAnimator() => animator;
+
+    public bool IsFacingLeft() => spriteRenderer.flipX;
+    public bool IsFacingRight() => !spriteRenderer.flipX;
+    public bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
+                || (horizontalInput > 0.0f && IsFacingLeft());
+    public void FlipSprite() => spriteRenderer.flipX = !spriteRenderer.flipX;
+
+    public Vector2 GetVelocity() => rbody.linearVelocity;
+    public float GetVelocityX() => rbody.linearVelocityX;
+    public float GetVelocityY() => rbody.linearVelocityY;
+
+    public bool IsGrounded() => isGrounded;
+    public bool IsFalling() => isFalling;
+
+    public string GetCurrentStateString() => stateMachine.GetCurrentStateString();
 }

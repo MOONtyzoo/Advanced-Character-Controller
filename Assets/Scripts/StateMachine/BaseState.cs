@@ -5,12 +5,11 @@ public abstract class BaseState<StateKey, RunnerObject>
     where StateKey : Enum
     where RunnerObject : MonoBehaviour
 {
-    private RunnerObject runnerObject;
+    protected RunnerObject runnerObject;
     public StateKey stateKey;
 
-    public BaseState(StateKey stateKey, RunnerObject runnerObject)
+    public BaseState(RunnerObject runnerObject)
     {
-        this.stateKey = stateKey;
         this.runnerObject = runnerObject;
     }
 

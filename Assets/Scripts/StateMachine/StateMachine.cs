@@ -9,6 +9,11 @@ public class StateMachine<StateKey, RunnerObject>
     private Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new Dictionary<StateKey, BaseState<StateKey, RunnerObject>>();
     private BaseState<StateKey, RunnerObject> currentState;
 
+    public void Begin(StateKey enterState)
+    {
+        TransitionToState(enterState);
+    }
+
     public void Update()
     {
         currentState.Update();
@@ -26,16 +31,19 @@ public class StateMachine<StateKey, RunnerObject>
             bool isTargetStateValid = targetState != null && targetState != currentState;
             if (isTargetStateValid)
             {
-                currentState.Exit();
+                currentState?.Exit();
                 currentState = targetState;
-                targetState.Enter();
+                currentState.Enter();
             }
         }
     }
 
-    public void AddState(StateKey StateKey, BaseState<StateKey, RunnerObject> newState)
+    public void AddState(StateKey stateKey, BaseState<StateKey, RunnerObject> newState)
     {
-        if (stateDictionary.ContainsKey(StateKey)) return;
-        stateDictionary.Add(StateKey, newState);
+        if (stateDictionary.ContainsKey(stateKey)) return;
+        stateDictionary.Add(stateKey, newState);
+        newState.stateKey = stateKey;
     }
+
+    public string GetCurrentStateString() => currentState.stateKey.ToString();
 }
