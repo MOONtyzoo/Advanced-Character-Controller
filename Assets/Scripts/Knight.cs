@@ -21,6 +21,7 @@ public class Knight : MonoBehaviour
     private bool isGrounded = false;
     private bool isFalling = false;
     private bool isTurning = false;
+    private bool isCrouching = false;
 
     private void Awake()
     {
@@ -47,11 +48,19 @@ public class Knight : MonoBehaviour
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask);
         isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
+        isCrouching = verticalInput < 0.0f;
         TurningLogic();
        
         // Faster acceleration if trying to turn in opposite direction or stopping
         float accelFactor = Mathf.Sign(horizontalInput) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
-        rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * runSpeed, accelFactor * runAccel * Time.deltaTime);
+        if (!isCrouching)
+        {
+            rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * runSpeed, accelFactor * runAccel * Time.deltaTime);
+        }
+        else
+        {
+            rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, horizontalInput * crouchSpeed, accelFactor * crouchAccel * Time.deltaTime);
+        }
 
         if (isGrounded && jumpInput > 0.0f)
         {
@@ -87,9 +96,10 @@ public class Knight : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        animator.SetFloat("run speed", Mathf.Abs(rbody.linearVelocityX));
+        animator.SetFloat("speed", Mathf.Abs(rbody.linearVelocityX));
         animator.SetBool("is falling", isFalling);
         animator.SetBool("is grounded", isGrounded);
         animator.SetBool("is turning", isTurning);
+        animator.SetBool("is crouching", isCrouching);
     }
 }
