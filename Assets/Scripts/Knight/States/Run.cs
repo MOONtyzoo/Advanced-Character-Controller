@@ -33,6 +33,12 @@ namespace PlayerStates
                 return true;
             }
 
+            if (runnerObject.verticalInput < 0.0f)
+            {
+                targetState = Knight.StateKey.Slide;
+                return true;
+            }
+
             if (runnerObject.jumpInput > 0.0f)
             {
                 runnerObject.Jump();

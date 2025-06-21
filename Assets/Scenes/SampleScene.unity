@@ -1618,6 +1618,7 @@ GameObject:
   - component: {fileID: 408834087}
   - component: {fileID: 408834089}
   - component: {fileID: 408834090}
+  - component: {fileID: 408834091}
   m_Layer: 6
   m_Name: Collidable
   m_TagString: Untagged
@@ -39040,7 +39041,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -39073,6 +39074,65 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!66 &408834091
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408834085}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 408834089}
+    m_ColliderPaths:
+    - - X: 1860000000
+        Y: -40000000
+      - X: -1860000000
+        Y: -40000000
+      - X: -1860000000
+        Y: -140000000
+      - X: 1860000000
+        Y: -140000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 185.99997, y: -14}
+      - {x: 185.99997, y: -4}
+      - {x: -186, y: -4.000029}
+      - {x: -185.99997, y: -14}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 408834085}
 --- !u!1 &458608482
 GameObject:
   m_ObjectHideFlags: 0
@@ -45223,9 +45283,13 @@ MonoBehaviour:
   jumpVelocity: 18
   crouchSpeed: 3.68
   crouchAccel: 25
+  slideSpeed: 13.5
   terrainLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  horizontalInput: 0
+  verticalInput: 0
+  jumpInput: 0
 --- !u!70 &1956647728
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class Knight : MonoBehaviour
     [SerializeField] private float jumpVelocity;
     [SerializeField] public float crouchSpeed;
     [SerializeField] public float crouchAccel;
+    [SerializeField] public float slideSpeed;
     [SerializeField] private LayerMask terrainLayerMask;
 
     private Rigidbody2D rbody;
@@ -27,9 +28,9 @@ public class Knight : MonoBehaviour
         Hurt, Die
     }
 
-    public float horizontalInput;
-    public float verticalInput;
-    public float jumpInput;
+    [HideInInspector] public float horizontalInput;
+    [HideInInspector] public float verticalInput;
+    [HideInInspector] public float jumpInput;
 
     private bool isGrounded = false;
     private bool isFalling = false;
@@ -51,11 +52,13 @@ public class Knight : MonoBehaviour
         BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
         BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
         BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
+        BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
 
         stateMachine.AddState(StateKey.Idle, idleState);
         stateMachine.AddState(StateKey.Run, runState);
         stateMachine.AddState(StateKey.Crouch, crouchState);
         stateMachine.AddState(StateKey.Aerial, aerialState);
+        stateMachine.AddState(StateKey.Slide, slideState);
 
         stateMachine.Begin(StateKey.Idle);
     }
@@ -109,6 +112,7 @@ public class Knight : MonoBehaviour
 
     public Vector2 GetVelocity() => rbody.linearVelocity;
     public float GetVelocityX() => rbody.linearVelocityX;
+    public void SetVelocityX(float newVelocityX) => rbody.linearVelocityX = newVelocityX;
     public float GetVelocityY() => rbody.linearVelocityY;
 
     public bool IsGrounded() => isGrounded;
