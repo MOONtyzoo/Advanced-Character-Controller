@@ -45284,14 +45284,56 @@ MonoBehaviour:
   crouchSpeed: 3.68
   crouchAccel: 25
   slideSpeed: 13.5
-  rollSpeed: 11.5
-  rollDuration: 1
+  rollSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.19641772
+      value: 0.8757942
+      inSlope: -1.0268795
+      outSlope: -1.0268795
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.18660988
+      outWeight: 0.30304408
+    - serializedVersion: 3
+      time: 0.31446004
+      value: 0.5606057
+      inSlope: -2.5341332
+      outSlope: -2.5341332
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.39578038
+      outWeight: 0.08602646
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.47379628
+      outSlope: -0.47379628
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.27952448
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rollStartSpeed: 18.5
+  rollEndSpeed: 8.5
+  rollDuration: 0.8
   terrainLayerMask:
     serializedVersion: 2
     m_Bits: 64
   horizontalInput: 0
   verticalInput: 0
-  jumpInput: 0
 --- !u!70 &1956647728
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

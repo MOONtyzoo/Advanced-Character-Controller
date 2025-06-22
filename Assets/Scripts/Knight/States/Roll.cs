@@ -23,16 +23,16 @@ namespace PlayerStates
             {
                 rollDirection = runnerObject.GetFacingDirection();
             }
-            runnerObject.SetVelocityX(rollDirection * runnerObject.slideSpeed);
+            rollTimer = 0.0f;
+            runnerObject.SetVelocityX(rollDirection * GetRollSpeed());
             runnerObject.TurnToFaceInputDirection();
             runnerObject.GetAnimator().SetBool("is rolling", true);
             runnerObject.GetAnimator().SetFloat("roll speed", 1.0f / runnerObject.rollDuration);
-            rollTimer = 0.0f;
         }
 
         public override void Update()
         {
-            runnerObject.SetVelocityX(rollDirection * runnerObject.slideSpeed);
+            runnerObject.SetVelocityX(rollDirection * GetRollSpeed());
             rollTimer += Time.deltaTime;
         }
 
@@ -57,6 +57,12 @@ namespace PlayerStates
         public override void Exit()
         {
             runnerObject.GetAnimator().SetBool("is rolling", false);
+        }
+
+        public float GetRollSpeed()
+        {
+            float t = runnerObject.rollSpeedCurve.Evaluate(rollTimer / runnerObject.rollDuration);
+            return Mathf.Lerp(runnerObject.rollEndSpeed, runnerObject.rollStartSpeed, t);
         }
     }
 }

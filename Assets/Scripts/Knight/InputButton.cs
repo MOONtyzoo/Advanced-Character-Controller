@@ -8,7 +8,7 @@ public class InputButton
     private bool valueThisFrame = false;
     private float bufferTime = 0.0f;
 
-    private float timeSinceLastPress = 0.0f;
+    private float timeSinceLastPress = 9999.0f;
 
     public InputButton(string buttonName, float bufferTime = 0.0f)
     {

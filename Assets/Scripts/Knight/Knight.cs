@@ -9,7 +9,9 @@ public class Knight : MonoBehaviour
     [SerializeField] public float crouchSpeed;
     [SerializeField] public float crouchAccel;
     [SerializeField] public float slideSpeed;
-    [SerializeField] public float rollSpeed;
+    [SerializeField] public AnimationCurve rollSpeedCurve;
+    [SerializeField] public float rollStartSpeed;
+    [SerializeField] public float rollEndSpeed;
     [SerializeField] public float rollDuration;
     [SerializeField] private LayerMask terrainLayerMask;
 
