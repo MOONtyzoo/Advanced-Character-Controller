@@ -39,7 +39,13 @@ namespace PlayerStates
                 return true;
             }
 
-            if (runnerObject.jumpInput > 0.0f)
+            if (runnerObject.rollInput.WasPressed())
+            {
+                targetState = Knight.StateKey.Roll;
+                return true;
+            }
+
+            if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
                 targetState = Knight.StateKey.Aerial;

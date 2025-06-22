@@ -45284,6 +45284,8 @@ MonoBehaviour:
   crouchSpeed: 3.68
   crouchAccel: 25
   slideSpeed: 13.5
+  rollSpeed: 11.5
+  rollDuration: 1
   terrainLayerMask:
     serializedVersion: 2
     m_Bits: 64

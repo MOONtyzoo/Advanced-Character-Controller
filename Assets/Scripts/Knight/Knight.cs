@@ -9,6 +9,8 @@ public class Knight : MonoBehaviour
     [SerializeField] public float crouchSpeed;
     [SerializeField] public float crouchAccel;
     [SerializeField] public float slideSpeed;
+    [SerializeField] public float rollSpeed;
+    [SerializeField] public float rollDuration;
     [SerializeField] private LayerMask terrainLayerMask;
 
     private Rigidbody2D rbody;
@@ -30,7 +32,8 @@ public class Knight : MonoBehaviour
 
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
-    [HideInInspector] public float jumpInput;
+    [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.17f);
+    [HideInInspector] public InputButton rollInput = new InputButton("Roll", 0.2f);
 
     private bool isGrounded = false;
     private bool isFalling = false;
@@ -53,12 +56,14 @@ public class Knight : MonoBehaviour
         BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
         BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
         BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
+        BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
 
         stateMachine.AddState(StateKey.Idle, idleState);
         stateMachine.AddState(StateKey.Run, runState);
         stateMachine.AddState(StateKey.Crouch, crouchState);
         stateMachine.AddState(StateKey.Aerial, aerialState);
         stateMachine.AddState(StateKey.Slide, slideState);
+        stateMachine.AddState(StateKey.Roll, rollState);
 
         stateMachine.Begin(StateKey.Idle);
     }
@@ -79,7 +84,8 @@ public class Knight : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        jumpInput = Input.GetAxis("Jump");
+        jumpInput.Update();
+        rollInput.Update();
     }
 
     private void UpdateAnimator()
@@ -106,6 +112,7 @@ public class Knight : MonoBehaviour
 
     public bool IsFacingLeft() => spriteRenderer.flipX;
     public bool IsFacingRight() => !spriteRenderer.flipX;
+    public float GetFacingDirection() => spriteRenderer.flipX ? -1.0f : 1.0f;
     public bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
                 || (horizontalInput > 0.0f && IsFacingLeft());
     public void TurnToFaceInputDirection()
