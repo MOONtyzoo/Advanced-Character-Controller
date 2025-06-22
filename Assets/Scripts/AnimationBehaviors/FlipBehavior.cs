@@ -17,8 +17,11 @@ public class FlipBehavior : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SpriteRenderer spriteRenderer = animator.GetComponent<SpriteRenderer>();
-        spriteRenderer.flipX = !spriteRenderer.flipX;
+        if (stateInfo.normalizedTime > 1.0f)
+        {
+            SpriteRenderer spriteRenderer = animator.GetComponent<SpriteRenderer>();
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

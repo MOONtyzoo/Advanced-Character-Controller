@@ -67,7 +67,7 @@ public class Knight : MonoBehaviour
     {
         GatherInput();
 
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask);
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask) && rbody.linearVelocityY <= 0.5f;
         isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
 
         stateMachine.Update();
@@ -108,7 +108,11 @@ public class Knight : MonoBehaviour
     public bool IsFacingRight() => !spriteRenderer.flipX;
     public bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
                 || (horizontalInput > 0.0f && IsFacingLeft());
-    public void FlipSprite() => spriteRenderer.flipX = !spriteRenderer.flipX;
+    public void TurnToFaceInputDirection()
+    {
+        if (horizontalInput == 0.0f) return;
+        spriteRenderer.flipX = horizontalInput < 0.0f;
+    }
 
     public Vector2 GetVelocity() => rbody.linearVelocity;
     public float GetVelocityX() => rbody.linearVelocityX;

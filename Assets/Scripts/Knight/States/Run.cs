@@ -8,7 +8,7 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            
+            runnerObject.TurnToFaceInputDirection();
         }
 
         public override void Update()

@@ -10,8 +10,9 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            slideDirection = Mathf.Sign(runnerObject.GetVelocityX());
+            slideDirection = (runnerObject.horizontalInput != 0.0f) ? Mathf.Sign(runnerObject.horizontalInput) : Mathf.Sign(runnerObject.GetVelocityX());
             runnerObject.SetVelocityX(slideDirection * runnerObject.slideSpeed);
+            runnerObject.TurnToFaceInputDirection();
             runnerObject.GetAnimator().SetBool("is sliding", true);
         }
 

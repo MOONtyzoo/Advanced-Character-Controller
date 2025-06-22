@@ -8,6 +8,11 @@ public class StateMachine<StateKey, RunnerObject>
 {
     private Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new Dictionary<StateKey, BaseState<StateKey, RunnerObject>>();
     private BaseState<StateKey, RunnerObject> currentState;
+    private bool debugMode = false;
+
+    public StateMachine(bool debugMode = false) {
+        this.debugMode = debugMode;
+    }
 
     public void Begin(StateKey enterState)
     {
@@ -34,6 +39,7 @@ public class StateMachine<StateKey, RunnerObject>
                 currentState?.Exit();
                 currentState = targetState;
                 currentState.Enter();
+                if (debugMode) Debug.Log(currentState.stateKey.ToString());
             }
         }
     }
