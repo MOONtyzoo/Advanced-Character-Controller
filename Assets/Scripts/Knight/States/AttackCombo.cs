@@ -11,7 +11,7 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            runnerObject.GetAnimator().SetTrigger("attack start");
+            runnerObject.GetAnimator().SetTrigger("attack enter");
             runnerObject.GetAnimator().SetBool("is attacking", true);
             runnerObject.TurnToFaceInputDirection();
             attackTimer = 0.0f;

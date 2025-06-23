@@ -3,20 +3,37 @@ using UnityEngine;
 
 public class Knight : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private LayerMask terrainLayerMask;
+
+    [Header("Run")]
     [SerializeField] public float runSpeed;
     [SerializeField] public float runAccel;
+
+    [Header("Jump")]
     [SerializeField] private float jumpVelocity;
+
+    [Header("Crouch")]
     [SerializeField] public float crouchSpeed;
     [SerializeField] public float crouchAccel;
+
+    [Header("Slide")]
     [SerializeField] public float slideSpeed;
+
+    [Header("Roll")]
     [SerializeField] public AnimationCurve rollSpeedCurve;
     [SerializeField] public float rollStartSpeed;
     [SerializeField] public float rollEndSpeed;
     [SerializeField] public float rollDuration;
+
+    [Header("Dive")]
+    [SerializeField] public float diveSpeed;
+    [SerializeField] public float diveUpVelocity;
+
+    [Header("Attacks")]
     [SerializeField] public float attackCombo1Duration;
     [SerializeField] public float attackCombo2Duration;
     [SerializeField] public float attackCrouchDuration;
-    [SerializeField] private LayerMask terrainLayerMask;
 
     private Rigidbody2D rbody;
     private SpriteRenderer spriteRenderer;
@@ -65,6 +82,7 @@ public class Knight : MonoBehaviour
         BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
         BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
         BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
+        BaseState<StateKey, Knight> diveState = new PlayerStates.AirDive(this);
 
         stateMachine.AddState(StateKey.Idle, idleState);
         stateMachine.AddState(StateKey.Run, runState);
@@ -74,6 +92,7 @@ public class Knight : MonoBehaviour
         stateMachine.AddState(StateKey.Roll, rollState);
         stateMachine.AddState(StateKey.AttackCombo, attackComboState);
         stateMachine.AddState(StateKey.AttackCrouch, attackCrouchState);
+        stateMachine.AddState(StateKey.AirDive, diveState);
 
         stateMachine.Begin(StateKey.Idle);
     }
@@ -136,6 +155,7 @@ public class Knight : MonoBehaviour
     public float GetVelocityX() => rbody.linearVelocityX;
     public void SetVelocityX(float newVelocityX) => rbody.linearVelocityX = newVelocityX;
     public float GetVelocityY() => rbody.linearVelocityY;
+    public void SetVelocityY(float newVelocityY) => rbody.linearVelocityY = newVelocityY;
 
     public bool IsGrounded() => isGrounded;
     public bool IsFalling() => isFalling;

@@ -45454,6 +45454,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e9ec4f3a9926a4fb6d749056981b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   runSpeed: 10.5
   runAccel: 32
   jumpVelocity: 18
@@ -45505,12 +45508,11 @@ MonoBehaviour:
   rollStartSpeed: 18.5
   rollEndSpeed: 8.5
   rollDuration: 0.65
+  diveSpeed: 14
+  diveUpVelocity: 8.5
   attackCombo1Duration: 0.3333333
   attackCombo2Duration: 0.5
   attackCrouchDuration: 0.3333333
-  terrainLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
   horizontalInput: 0
   verticalInput: 0
 --- !u!70 &1956647728

@@ -10,7 +10,7 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            runnerObject.GetAnimator().SetTrigger("attack start");
+            runnerObject.GetAnimator().SetTrigger("attack enter");
             runnerObject.GetAnimator().SetBool("is attacking", true);
             runnerObject.GetAnimator().SetBool("is crouching", true);
             runnerObject.TurnToFaceInputDirection();

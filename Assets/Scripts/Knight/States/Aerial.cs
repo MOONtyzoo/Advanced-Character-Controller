@@ -22,6 +22,12 @@ namespace PlayerStates
                 return true;
             }
 
+            if (runnerObject.rollInput.WasPressed())
+            {
+                targetState = Knight.StateKey.AirDive;
+                return true;
+            }
+
             targetState = Knight.StateKey.Idle;
             return false;
         }
