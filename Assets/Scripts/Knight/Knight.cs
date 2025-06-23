@@ -13,6 +13,9 @@ public class Knight : MonoBehaviour
     [SerializeField] public float rollStartSpeed;
     [SerializeField] public float rollEndSpeed;
     [SerializeField] public float rollDuration;
+    [SerializeField] public float attackCombo1Duration;
+    [SerializeField] public float attackCombo2Duration;
+    [SerializeField] public float attackCrouchDuration;
     [SerializeField] private LayerMask terrainLayerMask;
 
     private Rigidbody2D rbody;
@@ -34,8 +37,9 @@ public class Knight : MonoBehaviour
 
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
-    [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.17f);
+    [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.2f);
     [HideInInspector] public InputButton rollInput = new InputButton("Roll", 0.2f);
+    [HideInInspector] public InputButton attackInput = new InputButton("Attack", 0.2f);
 
     private bool isGrounded = false;
     private bool isFalling = false;
@@ -59,6 +63,8 @@ public class Knight : MonoBehaviour
         BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
         BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
         BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
+        BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
+        BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
 
         stateMachine.AddState(StateKey.Idle, idleState);
         stateMachine.AddState(StateKey.Run, runState);
@@ -66,6 +72,8 @@ public class Knight : MonoBehaviour
         stateMachine.AddState(StateKey.Aerial, aerialState);
         stateMachine.AddState(StateKey.Slide, slideState);
         stateMachine.AddState(StateKey.Roll, rollState);
+        stateMachine.AddState(StateKey.AttackCombo, attackComboState);
+        stateMachine.AddState(StateKey.AttackCrouch, attackCrouchState);
 
         stateMachine.Begin(StateKey.Idle);
     }
@@ -88,6 +96,7 @@ public class Knight : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
         jumpInput.Update();
         rollInput.Update();
+        attackInput.Update();
     }
 
     private void UpdateAnimator()

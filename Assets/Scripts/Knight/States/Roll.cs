@@ -4,10 +4,10 @@ namespace PlayerStates
 {
     public class Roll : BaseState<Knight.StateKey, Knight>
     {
-        public Roll(Knight runnerObject) : base(runnerObject) { }
-
         float rollDirection = 0.0f;
         float rollTimer = 0.0f;
+
+        public Roll(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {

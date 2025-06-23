@@ -37,6 +37,12 @@ namespace PlayerStates
                 return true;
             }
 
+            if (runnerObject.attackInput.WasPressed())
+            {
+                targetState = Knight.StateKey.AttackCombo;
+                return true;
+            }
+
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
