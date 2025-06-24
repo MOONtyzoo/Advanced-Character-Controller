@@ -22,7 +22,7 @@ namespace PlayerStates
                 return true;
             }
 
-            if (runnerObject.rollInput.WasPressed())
+            if (runnerObject.dodgeInput.WasPressed())
             {
                 targetState = Knight.StateKey.AirDive;
                 return true;

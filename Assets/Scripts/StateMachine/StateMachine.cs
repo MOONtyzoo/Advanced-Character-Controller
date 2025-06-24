@@ -21,7 +21,7 @@ public class StateMachine<StateKey, RunnerObject>
 
     public void Update()
     {
-        currentState.Update();
+        currentState.BaseUpdate();
 
         if (currentState.TryGetTransitions(out StateKey targetState))
         {
@@ -38,7 +38,7 @@ public class StateMachine<StateKey, RunnerObject>
             {
                 currentState?.Exit();
                 currentState = targetState;
-                currentState.Enter();
+                currentState.BaseEnter();
                 if (debugMode) Debug.Log(currentState.stateKey.ToString());
             }
         }

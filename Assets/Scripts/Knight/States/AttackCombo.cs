@@ -14,8 +14,7 @@ namespace PlayerStates
             runnerObject.GetAnimator().SetTrigger("attack enter");
             runnerObject.GetAnimator().SetBool("is attacking", true);
             runnerObject.TurnToFaceInputDirection();
-            attackTimer = 0.0f;
-            comboNum = 0;
+            PerformAttackNum(0);
         }
 
         public override void Update()
@@ -24,14 +23,13 @@ namespace PlayerStates
 
             if (attackTimer >= GetCurrentAttackDuration() && runnerObject.attackInput.WasPressed())
             {
-                comboNum = (comboNum + 1) % 2;
-                attackTimer = 0.0f;
+                PerformAttackNum((comboNum + 1) % 2);
             }
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)
         {
-            if (attackTimer >= GetCurrentAttackDuration())
+            if (attackTimer >= GetCurrentAttackDuration() + GetCurrentAttackEndLag())
             {
                 targetState = Knight.StateKey.Idle;
                 return true;
@@ -45,7 +43,50 @@ namespace PlayerStates
         {
             runnerObject.GetAnimator().SetBool("is attacking", false);
         }
-        
-        private float GetCurrentAttackDuration() => comboNum == 0 ? runnerObject.attackCombo1Duration : runnerObject.attackCombo2Duration;
+
+        private void PerformAttackNum(int newComboNum)
+        {
+            comboNum = newComboNum;
+            attackTimer = 0.0f;
+            runnerObject.GetAnimator().SetTrigger("next attack");
+            SetAnimatorAttackSpeed();
+            runnerObject.TurnToFaceInputDirection();
+        }
+
+        private float GetCurrentAttackDuration()
+        {
+            if (comboNum == 0)
+            {
+                return runnerObject.attackCombo1Duration;
+            }
+            else
+            {
+                return runnerObject.attackCombo2Duration;
+            }
+        }
+
+        private float GetCurrentAttackEndLag()
+        {
+            if (comboNum == 0)
+            {
+                return runnerObject.attackCombo1EndLag;
+            }
+            else
+            {
+                return runnerObject.attackCombo2EndLag;
+            }
+        }
+
+        private void SetAnimatorAttackSpeed()
+        {
+            if (comboNum == 0)
+            {
+                runnerObject.GetAnimator().SetFloat("attack speed", 0.6667f / runnerObject.attackCombo1Duration);
+            }
+            else
+            {
+                runnerObject.GetAnimator().SetFloat("attack speed", 0.3333f / runnerObject.attackCombo2Duration);
+            }
+        }
     }
 }

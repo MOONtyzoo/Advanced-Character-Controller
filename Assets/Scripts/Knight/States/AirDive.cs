@@ -25,7 +25,7 @@ namespace PlayerStates
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Run;
+                targetState = Knight.StateKey.Roll;
                 return true;
             }
 

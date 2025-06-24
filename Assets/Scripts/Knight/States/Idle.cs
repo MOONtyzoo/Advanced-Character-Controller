@@ -31,9 +31,9 @@ namespace PlayerStates
                 return true;
             }
 
-            if (runnerObject.rollInput.WasPressed())
+            if (runnerObject.dodgeInput.WasPressed())
             {
-                targetState = Knight.StateKey.Roll;
+                targetState = Knight.StateKey.Dodge;
                 return true;
             }
 

@@ -20,19 +20,26 @@ public class Knight : MonoBehaviour
     [Header("Slide")]
     [SerializeField] public float slideSpeed;
 
-    [Header("Roll")]
-    [SerializeField] public AnimationCurve rollSpeedCurve;
-    [SerializeField] public float rollStartSpeed;
-    [SerializeField] public float rollEndSpeed;
-    [SerializeField] public float rollDuration;
+    [Header("Dodge")]
+    [SerializeField] public AnimationCurve dodgeSpeedCurve;
+    [SerializeField] public float dodgeStartSpeed;
+    [SerializeField] public float dodgeEndSpeed;
+    [SerializeField] public float dodgeDuration;
+
 
     [Header("Dive")]
     [SerializeField] public float diveSpeed;
     [SerializeField] public float diveUpVelocity;
 
+    [Header("Roll")]
+    [SerializeField] public float rollSpeed;
+    [SerializeField] public float rollDuration;
+
     [Header("Attacks")]
     [SerializeField] public float attackCombo1Duration;
+    [SerializeField] public float attackCombo1EndLag;
     [SerializeField] public float attackCombo2Duration;
+    [SerializeField] public float attackCombo2EndLag;
     [SerializeField] public float attackCrouchDuration;
 
     private Rigidbody2D rbody;
@@ -42,7 +49,7 @@ public class Knight : MonoBehaviour
     private StateMachine<StateKey, Knight> stateMachine;
     public enum StateKey
     {
-        Idle, Run, Crouch, Roll, Slide,
+        Idle, Run, Crouch, Slide, Dodge, Roll,
 
         Aerial, AirDive,
         WallSlide, LedgeHang, LedgeVault,
@@ -55,7 +62,7 @@ public class Knight : MonoBehaviour
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
     [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.2f);
-    [HideInInspector] public InputButton rollInput = new InputButton("Roll", 0.2f);
+    [HideInInspector] public InputButton dodgeInput = new InputButton("Roll", 0.2f);
     [HideInInspector] public InputButton attackInput = new InputButton("Attack", 0.2f);
 
     private bool isGrounded = false;
@@ -74,25 +81,39 @@ public class Knight : MonoBehaviour
     {
         stateMachine = new StateMachine<StateKey, Knight>();
 
-        BaseState<StateKey, Knight> idleState = new PlayerStates.Idle(this);
-        BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
-        BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
-        BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
-        BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
-        BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
-        BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
-        BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
-        BaseState<StateKey, Knight> diveState = new PlayerStates.AirDive(this);
 
+        BaseState<StateKey, Knight> idleState = new PlayerStates.Idle(this);
         stateMachine.AddState(StateKey.Idle, idleState);
+
+        BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
         stateMachine.AddState(StateKey.Run, runState);
+
+        BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
         stateMachine.AddState(StateKey.Crouch, crouchState);
-        stateMachine.AddState(StateKey.Aerial, aerialState);
+
+        BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
         stateMachine.AddState(StateKey.Slide, slideState);
+
+        BaseState<StateKey, Knight> dodgeState = new PlayerStates.Dodge(this);
+        stateMachine.AddState(StateKey.Dodge, dodgeState);
+
+        BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
         stateMachine.AddState(StateKey.Roll, rollState);
+
+
+        BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
+        stateMachine.AddState(StateKey.Aerial, aerialState);
+
+        BaseState<StateKey, Knight> airDiveState = new PlayerStates.AirDive(this);
+        stateMachine.AddState(StateKey.AirDive, airDiveState);
+
+
+        BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
         stateMachine.AddState(StateKey.AttackCombo, attackComboState);
+
+        BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
         stateMachine.AddState(StateKey.AttackCrouch, attackCrouchState);
-        stateMachine.AddState(StateKey.AirDive, diveState);
+
 
         stateMachine.Begin(StateKey.Idle);
     }
@@ -114,7 +135,7 @@ public class Knight : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         jumpInput.Update();
-        rollInput.Update();
+        dodgeInput.Update();
         attackInput.Update();
     }
 
