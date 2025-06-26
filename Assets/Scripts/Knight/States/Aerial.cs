@@ -11,7 +11,7 @@ namespace PlayerStates
 
         public override void Update()
         {
-            
+
         }
 
         public override void FixedUpdate()
@@ -33,7 +33,7 @@ namespace PlayerStates
                 return true;
             }
 
-            if (runnerObject.IsInputtingTowardsWall())
+            if (runnerObject.IsInputtingTowardsWall() && runnerObject.GetTimeSinceLastJump() >= 0.2f)
             {
                 targetState = Knight.StateKey.WallSlide;
                 return true;
