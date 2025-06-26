@@ -8,13 +8,11 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
         }
 
         public override void Update()
         {
-            runnerObject.MoveTowards(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.runAccel);
-
             if (runnerObject.WantsToTurn())
             {
                 runnerObject.GetAnimator().SetBool("is turning", true);
@@ -23,6 +21,11 @@ namespace PlayerStates
             {
                 runnerObject.GetAnimator().SetBool("is turning", false);
             }
+        }
+        
+        public override void FixedUpdate()
+        {
+            runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.runAccel);
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)
@@ -63,7 +66,7 @@ namespace PlayerStates
                 targetState = Knight.StateKey.Aerial;
                 return true;
             }
-            
+
             targetState = Knight.StateKey.Idle;
             return false;
         }

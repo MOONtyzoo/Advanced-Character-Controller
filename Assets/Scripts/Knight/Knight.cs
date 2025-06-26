@@ -5,13 +5,16 @@ public class Knight : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private LayerMask terrainLayerMask;
+    [SerializeField] private Transform leftWallRaycastPoint;
+    [SerializeField] private Transform rightWallRaycastPoint;
 
     [Header("Run")]
     [SerializeField] public float runSpeed;
     [SerializeField] public float runAccel;
 
     [Header("Jump")]
-    [SerializeField] private float jumpVelocity;
+    [SerializeField] public float baseGravityScale;
+    [SerializeField] public float jumpVelocity;
 
     [Header("Crouch")]
     [SerializeField] public float crouchSpeed;
@@ -35,6 +38,10 @@ public class Knight : MonoBehaviour
     [SerializeField] public float rollSpeed;
     [SerializeField] public float rollDuration;
 
+    [Header("Wall")]
+    [SerializeField] public float wallSlideSpeed;
+    [SerializeField] public float wallSlideAccel;
+
     [Header("Attacks")]
     [SerializeField] public float attackCombo1Duration;
     [SerializeField] public float attackCombo1EndLag;
@@ -52,6 +59,7 @@ public class Knight : MonoBehaviour
         Idle, Run, Crouch, Slide, Dodge, Roll,
 
         Aerial, AirDive,
+
         WallSlide, LedgeHang, LedgeVault,
 
         AttackCombo, AttackCrouch,
@@ -67,10 +75,14 @@ public class Knight : MonoBehaviour
 
     private bool isGrounded = false;
     private bool isFalling = false;
+    private bool isWallToLeft = false;
+    private bool isWallToRight = false;
 
     private void Awake()
     {
         rbody = GetComponent<Rigidbody2D>();
+        rbody.gravityScale = baseGravityScale;
+
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
@@ -108,6 +120,10 @@ public class Knight : MonoBehaviour
         stateMachine.AddState(StateKey.AirDive, airDiveState);
 
 
+        BaseState<StateKey, Knight> wallSlideState = new PlayerStates.WallSlide(this);
+        stateMachine.AddState(StateKey.WallSlide, wallSlideState);
+
+
         BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
         stateMachine.AddState(StateKey.AttackCombo, attackComboState);
 
@@ -124,10 +140,17 @@ public class Knight : MonoBehaviour
 
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, terrainLayerMask) && rbody.linearVelocityY <= 0.5f;
         isFalling = !isGrounded && rbody.linearVelocityY < 0.0f;
+        isWallToLeft = Physics2D.Raycast(leftWallRaycastPoint.position, Vector2.left, 0.1f, terrainLayerMask);
+        isWallToRight = Physics2D.Raycast(rightWallRaycastPoint.position, Vector2.right, 0.1f, terrainLayerMask);
 
         stateMachine.Update();
 
         UpdateAnimator();
+    }
+
+    private void FixedUpdate()
+    {
+        stateMachine.FixedUpdate();
     }
 
     private void GatherInput()
@@ -141,16 +164,24 @@ public class Knight : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        animator.SetFloat("speed", Mathf.Abs(rbody.linearVelocityX));
+        animator.SetFloat("speed x", Mathf.Abs(rbody.linearVelocityX));
+        animator.SetFloat("speed y", Mathf.Abs(rbody.linearVelocityY));
         animator.SetBool("is falling", isFalling);
         animator.SetBool("is grounded", isGrounded);
     }
 
-    public void MoveTowards(float targetVelocityX, float acceleration)
+    public void MoveTowardsX(float targetVelocityX, float acceleration)
     {
         // Faster acceleration if trying to turn in opposite direction or stopping
-        float accelFactor = Mathf.Sign(horizontalInput) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
+        float accelFactor = Mathf.Sign(targetVelocityX) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
         rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, targetVelocityX, accelFactor * acceleration * Time.deltaTime);
+    }
+
+    public void MoveTowardsY(float targetVelocityY, float acceleration)
+    {
+        // Faster acceleration if trying to turn in opposite direction or stopping
+        float accelFactor = Mathf.Sign(targetVelocityY) == Mathf.Sign(rbody.linearVelocityY) ? 1.0f : 2.0f;
+        rbody.linearVelocityY = Mathf.MoveTowards(rbody.linearVelocityY, targetVelocityY, accelFactor * acceleration * Time.deltaTime);
     }
 
     public void Jump()
@@ -166,7 +197,8 @@ public class Knight : MonoBehaviour
     public float GetFacingDirection() => spriteRenderer.flipX ? -1.0f : 1.0f;
     public bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
                 || (horizontalInput > 0.0f && IsFacingLeft());
-    public void TurnToFaceInputDirection()
+    public void FlipSprite(bool facingLeft) => spriteRenderer.flipX = facingLeft;
+    public void FlipSpriteToFaceInputDirection()
     {
         if (horizontalInput == 0.0f) return;
         spriteRenderer.flipX = horizontalInput < 0.0f;
@@ -177,9 +209,19 @@ public class Knight : MonoBehaviour
     public void SetVelocityX(float newVelocityX) => rbody.linearVelocityX = newVelocityX;
     public float GetVelocityY() => rbody.linearVelocityY;
     public void SetVelocityY(float newVelocityY) => rbody.linearVelocityY = newVelocityY;
+    public void SetGravityScale(float newGravityScale) => rbody.gravityScale = newGravityScale;
 
     public bool IsGrounded() => isGrounded;
     public bool IsFalling() => isFalling;
+    public bool IsWallToLeft() => isWallToLeft;
+    public bool IsWallToRight() => isWallToRight;
+    public bool IsInputtingTowardsWall()
+    {
+        if (isWallToLeft) { return horizontalInput < 0.0f; }
+        else if (isWallToRight) { return horizontalInput > 0.0f; }
+        else { return false; }
+    }
+    
 
     public string GetCurrentStateString() => stateMachine.GetCurrentStateString();
 }

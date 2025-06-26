@@ -19,6 +19,11 @@ namespace PlayerStates
 
         public override void Update()
         {
+            
+        }
+
+        public override void FixedUpdate()
+        {
             runnerObject.SetVelocityX(rollDirection * runnerObject.rollSpeed);
         }
 

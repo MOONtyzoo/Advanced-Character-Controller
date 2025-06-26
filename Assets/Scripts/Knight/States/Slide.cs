@@ -12,13 +12,18 @@ namespace PlayerStates
         {
             slideDirection = (runnerObject.horizontalInput != 0.0f) ? Mathf.Sign(runnerObject.horizontalInput) : Mathf.Sign(runnerObject.GetVelocityX());
             runnerObject.SetVelocityX(slideDirection * runnerObject.slideSpeed);
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
             runnerObject.GetAnimator().SetBool("is sliding", true);
         }
 
         public override void Update()
         {
-            runnerObject.MoveTowards(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);
+            
+        }
+
+        public override void FixedUpdate()
+        {
+            runnerObject.MoveTowardsX(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);   
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)

@@ -13,8 +13,12 @@ namespace PlayerStates
 
         public override void Update()
         {
-            runnerObject.MoveTowards(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.runAccel);
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
+        }
+
+        public override void FixedUpdate()
+        {
+            runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.runAccel);
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)

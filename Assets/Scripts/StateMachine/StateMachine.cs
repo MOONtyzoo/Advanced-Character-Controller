@@ -29,6 +29,11 @@ public class StateMachine<StateKey, RunnerObject>
         }
     }
 
+    public void FixedUpdate()
+    {
+        currentState.FixedUpdate();
+    }
+
     private void TransitionToState(StateKey targetStateKey)
     {
         if (stateDictionary.TryGetValue(targetStateKey, out BaseState<StateKey, RunnerObject> targetState))

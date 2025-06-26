@@ -8,7 +8,7 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
             diveDirection = runnerObject.GetFacingDirection();
             runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);
             runnerObject.SetVelocityY(runnerObject.diveUpVelocity);
@@ -18,7 +18,11 @@ namespace PlayerStates
 
         public override void Update()
         {
-            runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);
+        }
+
+        public override void FixedUpdate()
+        {
+            runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);   
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)

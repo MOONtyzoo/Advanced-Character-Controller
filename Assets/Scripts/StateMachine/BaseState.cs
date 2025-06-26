@@ -28,6 +28,8 @@ public abstract class BaseState<StateKey, RunnerObject>
     }
     public abstract void Update();
 
+    public abstract void FixedUpdate();
+
     public abstract bool TryGetTransitions(out StateKey targetState);
     public abstract void Exit();
 }

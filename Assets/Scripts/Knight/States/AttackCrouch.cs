@@ -13,12 +13,17 @@ namespace PlayerStates
             runnerObject.GetAnimator().SetFloat("attack speed", 0.333f / runnerObject.attackCrouchDuration);
             runnerObject.GetAnimator().SetBool("is attacking", true);
             runnerObject.GetAnimator().SetBool("is crouching", true);
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
         }
 
         public override void Update()
         {
-            runnerObject.MoveTowards(0.0f, runnerObject.runAccel);
+            
+        }
+
+        public override void FixedUpdate()
+        {   
+            runnerObject.MoveTowardsX(0.0f, runnerObject.runAccel);
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)

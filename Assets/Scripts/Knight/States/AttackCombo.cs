@@ -13,7 +13,7 @@ namespace PlayerStates
         {
             runnerObject.GetAnimator().SetTrigger("attack enter");
             runnerObject.GetAnimator().SetBool("is attacking", true);
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
             PerformAttackNum(0);
         }
 
@@ -25,6 +25,11 @@ namespace PlayerStates
             {
                 PerformAttackNum((comboNum + 1) % 2);
             }
+        }
+
+        public override void FixedUpdate()
+        {
+            
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)
@@ -50,7 +55,7 @@ namespace PlayerStates
             attackTimer = 0.0f;
             runnerObject.GetAnimator().SetTrigger("next attack");
             SetAnimatorAttackSpeed();
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
         }
 
         private float GetCurrentAttackDuration()

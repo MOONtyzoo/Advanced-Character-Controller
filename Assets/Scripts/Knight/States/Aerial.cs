@@ -11,7 +11,12 @@ namespace PlayerStates
 
         public override void Update()
         {
-            runnerObject.MoveTowards(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.crouchAccel);
+            
+        }
+
+        public override void FixedUpdate()
+        {
+            runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.crouchAccel);
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)
@@ -25,6 +30,12 @@ namespace PlayerStates
             if (runnerObject.dodgeInput.WasPressed())
             {
                 targetState = Knight.StateKey.AirDive;
+                return true;
+            }
+
+            if (runnerObject.IsInputtingTowardsWall())
+            {
+                targetState = Knight.StateKey.WallSlide;
                 return true;
             }
 

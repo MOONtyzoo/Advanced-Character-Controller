@@ -23,7 +23,7 @@ namespace PlayerStates
                 diveDirection = runnerObject.GetFacingDirection();
             }
             runnerObject.SetVelocityX(diveDirection * GetRollSpeed());
-            runnerObject.TurnToFaceInputDirection();
+            runnerObject.FlipSpriteToFaceInputDirection();
             runnerObject.GetAnimator().SetBool("is dodging", true);
             runnerObject.GetAnimator().SetTrigger("dodge enter");
             runnerObject.GetAnimator().SetFloat("roll speed", 1.0f / runnerObject.dodgeDuration);
@@ -31,7 +31,12 @@ namespace PlayerStates
 
         public override void Update()
         {
-            runnerObject.SetVelocityX(diveDirection * GetRollSpeed());
+            
+        }
+
+        public override void FixedUpdate()
+        {
+            runnerObject.SetVelocityX(diveDirection * GetRollSpeed());   
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)
