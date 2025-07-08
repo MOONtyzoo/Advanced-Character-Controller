@@ -18,12 +18,12 @@ namespace PlayerStates
 
         public override void Update()
         {
-            
+
         }
 
         public override void FixedUpdate()
         {
-            runnerObject.MoveTowardsX(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);   
+            runnerObject.MoveTowardsX(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);
         }
 
         public override bool TryGetTransitions(out Knight.StateKey targetState)

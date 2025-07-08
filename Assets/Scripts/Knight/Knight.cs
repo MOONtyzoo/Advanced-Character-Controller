@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Knight : MonoBehaviour
+public partial class Knight : MonoBehaviour
 {
     [SerializeField] private bool debugMode = false;
 
@@ -127,6 +127,9 @@ public class Knight : MonoBehaviour
 
         BaseState<StateKey, Knight> wallSlideState = new PlayerStates.WallSlide(this);
         stateMachine.AddState(StateKey.WallSlide, wallSlideState);
+
+        BaseState<StateKey, Knight> ledgeHangState = new PlayerStates.LedgeHang(this);
+        stateMachine.AddState(StateKey.LedgeHang, ledgeHangState);
 
 
         BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);

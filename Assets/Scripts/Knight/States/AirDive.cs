@@ -33,6 +33,12 @@ namespace PlayerStates
                 return true;
             }
 
+            if (runnerObject.IsInputtingTowardsWall())
+            {
+                targetState = Knight.StateKey.WallSlide;
+                return true;
+            }
+
             targetState = Knight.StateKey.Idle;
             return false;
         }
