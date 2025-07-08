@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,54 +12,56 @@ public partial class Knight : MonoBehaviour
     [SerializeField] private Transform rightWallRaycastPoint;
 
     [Header("Run")]
-    [SerializeField] public float runSpeed;
-    [SerializeField] public float runAccel;
+    [SerializeField] private float runSpeed;
+    [SerializeField] private float runAccel;
 
     [Header("Jump")]
-    [SerializeField] public float baseGravityScale;
-    [SerializeField] public float jumpSpeed;
+    [SerializeField] private float baseGravityScale;
+    [SerializeField] private float jumpSpeed;
 
     [Header("Crouch")]
-    [SerializeField] public float crouchSpeed;
-    [SerializeField] public float crouchAccel;
+    [SerializeField] private float crouchSpeed;
+    [SerializeField] private float crouchAccel;
 
     [Header("Slide")]
-    [SerializeField] public float slideSpeed;
+    [SerializeField] private float slideSpeed;
 
     [Header("Dodge")]
-    [SerializeField] public AnimationCurve dodgeSpeedCurve;
-    [SerializeField] public float dodgeStartSpeed;
-    [SerializeField] public float dodgeEndSpeed;
-    [SerializeField] public float dodgeDuration;
+    [SerializeField] private AnimationCurve dodgeSpeedCurve;
+    [SerializeField] private float dodgeStartSpeed;
+    [SerializeField] private float dodgeEndSpeed;
+    [SerializeField] private float dodgeDuration;
 
 
     [Header("Dive")]
-    [SerializeField] public float diveSpeed;
-    [SerializeField] public float diveUpVelocity;
+    [SerializeField] private float diveSpeed;
+    [SerializeField] private float diveUpVelocity;
 
     [Header("Roll")]
-    [SerializeField] public float rollSpeed;
-    [SerializeField] public float rollDuration;
+    [SerializeField] private float rollSpeed;
+    [SerializeField] private float rollDuration;
 
     [Header("Wall")]
-    [SerializeField] public float wallSlideSpeed;
-    [SerializeField] public float wallSlideAccel;
-    [SerializeField] public float wallJumpSpeed;
-    [SerializeField] public float wallJumpAngle;
+    [SerializeField] private float wallSlideSpeed;
+    [SerializeField] private float wallSlideAccel;
+    [SerializeField] private float wallJumpSpeed;
+    [SerializeField] private float wallJumpAngle;
 
     [Header("Attacks")]
-    [SerializeField] public float attackCombo1Duration;
-    [SerializeField] public float attackCombo1EndLag;
-    [SerializeField] public float attackCombo2Duration;
-    [SerializeField] public float attackCombo2EndLag;
-    [SerializeField] public float attackCrouchDuration;
+    [SerializeField] private float attackCombo1Duration;
+    [SerializeField] private float attackCombo1EndLag;
+    [SerializeField] private float attackCombo2Duration;
+    [SerializeField] private float attackCombo2EndLag;
+    [SerializeField] private float attackCrouchDuration;
 
     private Rigidbody2D rbody;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
+    private event Action testEvent;
+
     private StateMachine<StateKey, Knight> stateMachine;
-    public enum StateKey
+    private enum StateKey
     {
         Idle, Run, Crouch, Slide, Dodge, Roll,
 
@@ -71,11 +74,11 @@ public partial class Knight : MonoBehaviour
         Hurt, Die
     }
 
-    [HideInInspector] public float horizontalInput;
-    [HideInInspector] public float verticalInput;
-    [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.2f);
-    [HideInInspector] public InputButton dodgeInput = new InputButton("Roll", 0.2f);
-    [HideInInspector] public InputButton attackInput = new InputButton("Attack", 0.2f);
+    private float horizontalInput;
+    private float verticalInput;
+    private InputButton jumpInput = new InputButton("Jump", 0.2f);
+    private InputButton dodgeInput = new InputButton("Roll", 0.2f);
+    private InputButton attackInput = new InputButton("Attack", 0.2f);
 
     private RaycastHit2D groundRaycastHit;
     private RaycastHit2D leftWallRaycastHit;
@@ -99,43 +102,42 @@ public partial class Knight : MonoBehaviour
         stateMachine = new StateMachine<StateKey, Knight>(debugMode);
 
 
-        BaseState<StateKey, Knight> idleState = new PlayerStates.Idle(this);
+        BaseState<StateKey, Knight> idleState = new StateIdle(this);
         stateMachine.AddState(StateKey.Idle, idleState);
 
-        BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
+        BaseState<StateKey, Knight> runState = new StateRun(this);
         stateMachine.AddState(StateKey.Run, runState);
 
-        BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
+        BaseState<StateKey, Knight> crouchState = new StateCrouch(this);
         stateMachine.AddState(StateKey.Crouch, crouchState);
 
-        BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
+        BaseState<StateKey, Knight> slideState = new StateSlide(this);
         stateMachine.AddState(StateKey.Slide, slideState);
 
-        BaseState<StateKey, Knight> dodgeState = new PlayerStates.Dodge(this);
+        BaseState<StateKey, Knight> dodgeState = new StateDodge(this);
         stateMachine.AddState(StateKey.Dodge, dodgeState);
 
-        BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
+        BaseState<StateKey, Knight> rollState = new StateRoll(this);
         stateMachine.AddState(StateKey.Roll, rollState);
 
 
-        BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
+        BaseState<StateKey, Knight> aerialState = new StateAerial(this);
         stateMachine.AddState(StateKey.Aerial, aerialState);
 
-        BaseState<StateKey, Knight> airDiveState = new PlayerStates.AirDive(this);
+        BaseState<StateKey, Knight> airDiveState = new StateDive(this);
         stateMachine.AddState(StateKey.AirDive, airDiveState);
 
-
-        BaseState<StateKey, Knight> wallSlideState = new PlayerStates.WallSlide(this);
+        BaseState<StateKey, Knight> wallSlideState = new StateWallSlide(this);
         stateMachine.AddState(StateKey.WallSlide, wallSlideState);
 
-        BaseState<StateKey, Knight> ledgeHangState = new PlayerStates.LedgeHang(this);
+        BaseState<StateKey, Knight> ledgeHangState = new StateLedgeHang(this);
         stateMachine.AddState(StateKey.LedgeHang, ledgeHangState);
 
 
-        BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
+        BaseState<StateKey, Knight> attackComboState = new StateAttackCombo(this);
         stateMachine.AddState(StateKey.AttackCombo, attackComboState);
 
-        BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
+        BaseState<StateKey, Knight> attackCrouchState = new StateAttackCrouch(this);
         stateMachine.AddState(StateKey.AttackCrouch, attackCrouchState);
 
 

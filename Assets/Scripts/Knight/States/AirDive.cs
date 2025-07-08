@@ -1,10 +1,10 @@
-namespace PlayerStates
+public partial class Knight
 {
-    public class AirDive : BaseState<Knight.StateKey, Knight>
+    private class StateDive : BaseState<StateKey, Knight>
     {
         float diveDirection = 0.0f;
 
-        public AirDive(Knight runnerObject) : base(runnerObject) { }
+        public StateDive(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -25,21 +25,21 @@ namespace PlayerStates
             runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);   
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Roll;
+                targetState = StateKey.Roll;
                 return true;
             }
 
             if (runnerObject.IsInputtingTowardsWall())
             {
-                targetState = Knight.StateKey.WallSlide;
+                targetState = StateKey.WallSlide;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

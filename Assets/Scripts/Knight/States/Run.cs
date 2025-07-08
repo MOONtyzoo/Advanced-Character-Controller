@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Run : BaseState<Knight.StateKey, Knight>
+    private class StateRun : BaseState<StateKey, Knight>
     {
-        public Run(Knight runnerObject) : base(runnerObject) { }
+        public StateRun(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -28,46 +28,46 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.runAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (Mathf.Abs(runnerObject.GetVelocityX()) < 1.0f && runnerObject.horizontalInput == 0.0f)
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
             if (runnerObject.verticalInput < 0.0f)
             {
-                targetState = Knight.StateKey.Slide;
+                targetState = StateKey.Slide;
                 return true;
             }
 
             if (runnerObject.dodgeInput.WasPressed())
             {
-                targetState = Knight.StateKey.Dodge;
+                targetState = StateKey.Dodge;
                 return true;
             }
 
             if (runnerObject.attackInput.WasPressed())
             {
-                targetState = Knight.StateKey.AttackCombo;
+                targetState = StateKey.AttackCombo;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

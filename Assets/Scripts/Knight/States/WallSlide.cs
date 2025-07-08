@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class WallSlide : BaseState<Knight.StateKey, Knight>
+    private class StateWallSlide : BaseState<StateKey, Knight>
     {
         private bool isWallToTheRight;
         private float timeInputtingAwayFromWall = 0.0f;
 
-        public WallSlide(Knight runnerObject) : base(runnerObject) { }
+        public StateWallSlide(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -41,28 +41,28 @@ namespace PlayerStates
             runnerObject.MoveTowardsY(-1.0f * runnerObject.wallSlideSpeed, runnerObject.wallSlideAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
             if (timeInputtingAwayFromWall >= 0.05f)
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.WallJump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

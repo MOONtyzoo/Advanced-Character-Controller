@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Slide : BaseState<Knight.StateKey, Knight>
+    private class StateSlide : BaseState<StateKey, Knight>
     {
-        public Slide(Knight runnerObject) : base(runnerObject) { }
+        public StateSlide(Knight runnerObject) : base(runnerObject) { }
 
         float slideDirection = 0.0f;
 
@@ -26,28 +26,28 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.verticalInput >= 0.0f)
             {
-                targetState = Knight.StateKey.Run;
+                targetState = StateKey.Run;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

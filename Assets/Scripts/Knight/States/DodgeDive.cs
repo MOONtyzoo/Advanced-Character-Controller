@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Dodge : BaseState<Knight.StateKey, Knight>
+    private class StateDodge : BaseState<StateKey, Knight>
     {
         float diveDirection = 0.0f;
 
-        public Dodge(Knight runnerObject) : base(runnerObject) { }
+        public StateDodge(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -39,21 +39,21 @@ namespace PlayerStates
             runnerObject.SetVelocityX(diveDirection * GetRollSpeed());   
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (stateTimer >= runnerObject.dodgeDuration)
             {
-                targetState = Knight.StateKey.Roll;
+                targetState = StateKey.Roll;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

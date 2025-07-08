@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class AttackCrouch : BaseState<Knight.StateKey, Knight>
+    private class StateAttackCrouch : BaseState<StateKey, Knight>
     {
-        public AttackCrouch(Knight runnerObject) : base(runnerObject) { }
+        public StateAttackCrouch(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -26,15 +26,15 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(0.0f, runnerObject.runAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (stateTimer >= runnerObject.attackCrouchDuration)
             {
-                targetState = Knight.StateKey.Crouch;
+                targetState = StateKey.Crouch;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

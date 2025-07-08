@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Roll : BaseState<Knight.StateKey, Knight>
+    private class StateRoll : BaseState<StateKey, Knight>
     {
         float rollDirection = 0.0f;
 
-        public Roll(Knight runnerObject) : base(runnerObject) { }
+        public StateRoll(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -27,27 +27,27 @@ namespace PlayerStates
             runnerObject.SetVelocityX(rollDirection * runnerObject.rollSpeed);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (stateTimer >= runnerObject.rollDuration * 0.66f && runnerObject.verticalInput < 0.0f)
             {
-                targetState = Knight.StateKey.Slide;
+                targetState = StateKey.Slide;
                 return true;
             }
 
             if (stateTimer >= runnerObject.rollDuration)
             {
-                targetState = Knight.StateKey.Run;
+                targetState = StateKey.Run;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

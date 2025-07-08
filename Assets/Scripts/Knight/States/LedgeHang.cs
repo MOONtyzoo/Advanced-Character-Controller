@@ -1,8 +1,8 @@
-namespace PlayerStates
+public partial class Knight
 {
-    public class LedgeHang : BaseState<Knight.StateKey, Knight>
+    private class StateLedgeHang : BaseState<StateKey, Knight>
     {
-        public LedgeHang(Knight runnerObject) : base(runnerObject) { }
+        public StateLedgeHang(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -20,15 +20,15 @@ namespace PlayerStates
             runnerObject.SetVelocityY(0.0f);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.jumpInput.WasPressed())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

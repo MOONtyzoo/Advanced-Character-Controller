@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class AttackCombo : BaseState<Knight.StateKey, Knight>
+    private class StateAttackCombo : BaseState<StateKey, Knight>
     {
         private float attackTimer = 0.0f;
         private int comboNum = 0;
 
-        public AttackCombo(Knight runnerObject) : base(runnerObject) { }
+        public StateAttackCombo(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
@@ -32,15 +32,15 @@ namespace PlayerStates
             
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (attackTimer >= GetCurrentAttackDuration() + GetCurrentAttackEndLag())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
