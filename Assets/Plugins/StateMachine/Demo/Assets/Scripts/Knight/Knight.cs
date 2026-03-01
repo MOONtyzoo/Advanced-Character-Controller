@@ -97,7 +97,8 @@ public partial class Knight : MonoBehaviour
 
     private void InitializeStateMachine()
     {
-        stateMachine = new StateMachine<StateKey, Knight>(debugMode);
+        stateMachine = new StateMachine<StateKey, Knight>();
+        stateMachine.SetDebugMode(debugMode);
 
 
         var idleState = new Idle(this);

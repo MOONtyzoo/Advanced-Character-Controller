@@ -10,13 +10,9 @@ namespace StateMachine
     {
         public event Action<StateKey, StateKey> OnStateChanged;
         
-        private Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new Dictionary<StateKey, BaseState<StateKey, RunnerObject>>();
+        private readonly Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new();
         private BaseState<StateKey, RunnerObject> currentState;
         private bool debugMode = false;
-
-        public StateMachine(bool debugMode = false) {
-            this.debugMode = debugMode;
-        }
 
         public void Begin(StateKey enterState)
         {
@@ -60,6 +56,11 @@ namespace StateMachine
             if (stateDictionary.ContainsKey(stateKey)) return;
             stateDictionary.Add(stateKey, newState);
             newState.stateKey = stateKey;
+        }
+
+        public void SetDebugMode(bool enabled)
+        {
+            debugMode = enabled;
         }
 
         public StateKey GetCurrentState() => currentState.stateKey;
