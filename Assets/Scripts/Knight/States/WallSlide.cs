@@ -1,8 +1,9 @@
+using StateMachine;
 using UnityEngine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class WallSlide : BaseState<Knight.StateKey, Knight>
+    public class WallSlide : BaseState<StateKey, Knight>
     {
         private bool isWallToTheRight;
         private float timeInputtingAwayFromWall = 0.0f;
@@ -13,15 +14,15 @@ namespace PlayerStates
         {
             isWallToTheRight = runnerObject.IsWallToRight();
             runnerObject.FlipSprite(isWallToTheRight ? true : false);
-            runnerObject.GetAnimator().SetTrigger("wall slide enter");
-            runnerObject.GetAnimator().SetBool("is wall sliding", true);
+            runnerObject.animator.SetTrigger("wall slide enter");
+            runnerObject.animator.SetBool("is wall sliding", true);
 
-            runnerObject.SetGravityScale(0.0f);
+            runnerObject.rbody.gravityScale = 0.0f;
             runnerObject.SnapToWall();
 
-            float clampedVelocityY = Mathf.Clamp(runnerObject.GetVelocityY(), -runnerObject.wallSlideSpeed, 2.0f * runnerObject.wallSlideSpeed);
-            runnerObject.SetVelocityY(clampedVelocityY);
-            runnerObject.SetVelocityX(0.0f);
+            float clampedVelocityY = Mathf.Clamp(runnerObject.rbody.linearVelocityY, -runnerObject.wallSlideSpeed, 2.0f * runnerObject.wallSlideSpeed);
+            runnerObject.rbody.linearVelocityY = clampedVelocityY;
+            runnerObject.rbody.linearVelocityX = 0.0f;
         }
 
         public override void Update()
@@ -41,37 +42,37 @@ namespace PlayerStates
             runnerObject.MoveTowardsY(-1.0f * runnerObject.wallSlideSpeed, runnerObject.wallSlideAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
             if (timeInputtingAwayFromWall >= 0.05f)
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.WallJump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
             runnerObject.FlipSprite(runnerObject.IsWallToRight());
-            runnerObject.GetAnimator().SetBool("is wall sliding", false);
+            runnerObject.animator.SetBool("is wall sliding", false);
 
-            runnerObject.SetGravityScale(runnerObject.baseGravityScale);
+            runnerObject.rbody.gravityScale = runnerObject.baseGravityScale;
         }
     }
 }

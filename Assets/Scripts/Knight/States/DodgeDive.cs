@@ -1,8 +1,9 @@
 using UnityEngine;
+using StateMachine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Dodge : BaseState<Knight.StateKey, Knight>
+    public class Dodge : BaseState<StateKey, Knight>
     {
         float diveDirection = 0.0f;
 
@@ -14,19 +15,19 @@ namespace PlayerStates
             {
                 diveDirection = Mathf.Sign(runnerObject.horizontalInput);
             }
-            else if (runnerObject.GetVelocityX() != 0.0f)
+            else if (runnerObject.rbody.linearVelocityX != 0.0f)
             {
-                diveDirection = Mathf.Sign(runnerObject.GetVelocityX());
+                diveDirection = Mathf.Sign(runnerObject.rbody.linearVelocityX);
             }
             else
             {
                 diveDirection = runnerObject.GetFacingDirection();
             }
-            runnerObject.SetVelocityX(diveDirection * GetRollSpeed());
+            runnerObject.rbody.linearVelocityX = diveDirection * GetRollSpeed();
             runnerObject.FlipSpriteToFaceInputDirection();
-            runnerObject.GetAnimator().SetBool("is dodging", true);
-            runnerObject.GetAnimator().SetTrigger("dodge enter");
-            runnerObject.GetAnimator().SetFloat("roll speed", 1.0f / runnerObject.dodgeDuration);
+            runnerObject.animator.SetBool("is dodging", true);
+            runnerObject.animator.SetTrigger("dodge enter");
+            runnerObject.animator.SetFloat("roll speed", 1.0f / runnerObject.dodgeDuration);
         }
 
         public override void Update()
@@ -36,30 +37,30 @@ namespace PlayerStates
 
         public override void FixedUpdate()
         {
-            runnerObject.SetVelocityX(diveDirection * GetRollSpeed());   
+            runnerObject.rbody.linearVelocityX = diveDirection * GetRollSpeed();   
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (stateTimer >= runnerObject.dodgeDuration)
             {
-                targetState = Knight.StateKey.Roll;
+                targetState = StateKey.Roll;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
-            runnerObject.GetAnimator().SetBool("is dodging", false);
+            runnerObject.animator.SetBool("is dodging", false);
         }
 
         public float GetRollSpeed()

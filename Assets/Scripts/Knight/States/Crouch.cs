@@ -1,12 +1,14 @@
-namespace PlayerStates
+using StateMachine;
+
+public partial class Knight
 {
-    public class Crouch : BaseState<Knight.StateKey, Knight>
+    public class Crouch : BaseState<StateKey, Knight>
     {
         public Crouch(Knight runnerObject) : base(runnerObject) { }
 
         public override void Enter()
         {
-            runnerObject.GetAnimator().SetBool("is crouching", true);
+            runnerObject.animator.SetBool("is crouching", true);
         }
 
         public override void Update()
@@ -19,40 +21,40 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.crouchSpeed, runnerObject.crouchAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.verticalInput >= 0.0f)
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
             if (runnerObject.attackInput.WasPressed())
             {
-                targetState = Knight.StateKey.AttackCrouch;
+                targetState = StateKey.AttackCrouch;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
-            runnerObject.GetAnimator().SetBool("is crouching", false);
+            runnerObject.animator.SetBool("is crouching", false);
         }
     }
 }

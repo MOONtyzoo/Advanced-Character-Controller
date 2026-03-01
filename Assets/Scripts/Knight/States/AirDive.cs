@@ -1,6 +1,8 @@
-namespace PlayerStates
+using StateMachine;
+
+public partial class Knight
 {
-    public class AirDive : BaseState<Knight.StateKey, Knight>
+    public class AirDive : BaseState<StateKey, Knight>
     {
         float diveDirection = 0.0f;
 
@@ -10,10 +12,11 @@ namespace PlayerStates
         {
             runnerObject.FlipSpriteToFaceInputDirection();
             diveDirection = runnerObject.GetFacingDirection();
-            runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);
-            runnerObject.SetVelocityY(runnerObject.diveUpVelocity);
-            runnerObject.GetAnimator().SetBool("is diving", true);
-            runnerObject.GetAnimator().SetTrigger("dive enter");
+            runnerObject.rbody.linearVelocityX = diveDirection * runnerObject.diveSpeed;
+            runnerObject.rbody.linearVelocityY = runnerObject.diveUpVelocity;
+    
+            runnerObject.animator.SetBool("is diving", true);
+            runnerObject.animator.SetTrigger("dive enter");
         }
 
         public override void Update()
@@ -22,30 +25,30 @@ namespace PlayerStates
 
         public override void FixedUpdate()
         {
-            runnerObject.SetVelocityX(diveDirection * runnerObject.diveSpeed);   
+            runnerObject.rbody.linearVelocityX = diveDirection * runnerObject.diveSpeed;
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Roll;
+                targetState = StateKey.Roll;
                 return true;
             }
 
             if (runnerObject.IsInputtingTowardsWall())
             {
-                targetState = Knight.StateKey.WallSlide;
+                targetState = StateKey.WallSlide;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
-            runnerObject.GetAnimator().SetBool("is diving", false);
+            runnerObject.animator.SetBool("is diving", false);
         }
     }
 }

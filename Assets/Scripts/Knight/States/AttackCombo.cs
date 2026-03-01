@@ -1,8 +1,9 @@
 using UnityEngine;
+using StateMachine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class AttackCombo : BaseState<Knight.StateKey, Knight>
+    public class AttackCombo : BaseState<StateKey, Knight>
     {
         private float attackTimer = 0.0f;
         private int comboNum = 0;
@@ -11,8 +12,9 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            runnerObject.GetAnimator().SetTrigger("attack enter");
-            runnerObject.GetAnimator().SetBool("is attacking", true);
+            runnerObject.rbody.linearVelocity = Vector2.zero;
+            runnerObject.animator.SetTrigger("attack enter");
+            runnerObject.animator.SetBool("is attacking", true);
             runnerObject.FlipSpriteToFaceInputDirection();
             PerformAttackNum(0);
         }
@@ -32,28 +34,28 @@ namespace PlayerStates
             
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (attackTimer >= GetCurrentAttackDuration() + GetCurrentAttackEndLag())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
-            runnerObject.GetAnimator().SetBool("is attacking", false);
+            runnerObject.animator.SetBool("is attacking", false);
         }
 
         private void PerformAttackNum(int newComboNum)
         {
             comboNum = newComboNum;
             attackTimer = 0.0f;
-            runnerObject.GetAnimator().SetTrigger("next attack");
+            runnerObject.animator.SetTrigger("next attack");
             SetAnimatorAttackSpeed();
             runnerObject.FlipSpriteToFaceInputDirection();
         }
@@ -86,11 +88,11 @@ namespace PlayerStates
         {
             if (comboNum == 0)
             {
-                runnerObject.GetAnimator().SetFloat("attack speed", 0.6667f / runnerObject.attackCombo1Duration);
+                runnerObject.animator.SetFloat("attack speed", 0.6667f / runnerObject.attackCombo1Duration);
             }
             else
             {
-                runnerObject.GetAnimator().SetFloat("attack speed", 0.3333f / runnerObject.attackCombo2Duration);
+                runnerObject.animator.SetFloat("attack speed", 0.3333f / runnerObject.attackCombo2Duration);
             }
         }
     }

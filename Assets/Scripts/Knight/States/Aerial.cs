@@ -1,6 +1,9 @@
-namespace PlayerStates
+using StateMachine;
+using UnityEngine;
+
+public partial class Knight
 {
-    public class Aerial : BaseState<Knight.StateKey, Knight>
+    public class Aerial : BaseState<StateKey, Knight>
     {
         public Aerial(Knight runnerObject) : base(runnerObject) { }
 
@@ -19,27 +22,27 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(runnerObject.horizontalInput * runnerObject.runSpeed, runnerObject.crouchAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Idle;
+                targetState = StateKey.Idle;
                 return true;
             }
 
             if (runnerObject.dodgeInput.WasPressed())
             {
-                targetState = Knight.StateKey.AirDive;
+                targetState = StateKey.AirDive;
                 return true;
             }
 
-            if (runnerObject.IsInputtingTowardsWall() && runnerObject.GetTimeSinceLastJump() >= 0.2f)
+            if (runnerObject.IsInputtingTowardsWall() && runnerObject.timeSinceLastJump >= 0.2f)
             {
-                targetState = Knight.StateKey.WallSlide;
+                targetState = StateKey.WallSlide;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 

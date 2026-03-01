@@ -2,59 +2,68 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateMachine<StateKey, RunnerObject>
-    where StateKey : Enum
-    where RunnerObject : MonoBehaviour
+namespace StateMachine
 {
-    private Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new Dictionary<StateKey, BaseState<StateKey, RunnerObject>>();
-    private BaseState<StateKey, RunnerObject> currentState;
-    private bool debugMode = false;
-
-    public StateMachine(bool debugMode = false) {
-        this.debugMode = debugMode;
-    }
-
-    public void Begin(StateKey enterState)
+    public class StateMachine<StateKey, RunnerObject>
+        where StateKey : Enum
+        where RunnerObject : MonoBehaviour
     {
-        TransitionToState(enterState);
-    }
+        public event Action<StateKey, StateKey> OnStateChanged;
+        
+        private Dictionary<StateKey, BaseState<StateKey, RunnerObject>> stateDictionary = new Dictionary<StateKey, BaseState<StateKey, RunnerObject>>();
+        private BaseState<StateKey, RunnerObject> currentState;
+        private bool debugMode = false;
 
-    public void Update()
-    {
-        currentState.BaseUpdate();
-
-        if (currentState.TryGetTransitions(out StateKey targetState))
-        {
-            TransitionToState(targetState);
+        public StateMachine(bool debugMode = false) {
+            this.debugMode = debugMode;
         }
-    }
 
-    public void FixedUpdate()
-    {
-        currentState.FixedUpdate();
-    }
-
-    private void TransitionToState(StateKey targetStateKey)
-    {
-        if (stateDictionary.TryGetValue(targetStateKey, out BaseState<StateKey, RunnerObject> targetState))
+        public void Begin(StateKey enterState)
         {
-            bool isTargetStateValid = targetState != null && targetState != currentState;
-            if (isTargetStateValid)
+            TransitionToState(enterState);
+        }
+
+        public void Update()
+        {
+            currentState.BaseUpdate();
+
+            if (currentState.TryGetTransitions(out StateKey targetState))
             {
-                currentState?.Exit();
-                currentState = targetState;
-                currentState.BaseEnter();
-                if (debugMode) Debug.Log(currentState.stateKey.ToString());
+                TransitionToState(targetState);
             }
         }
-    }
 
-    public void AddState(StateKey stateKey, BaseState<StateKey, RunnerObject> newState)
-    {
-        if (stateDictionary.ContainsKey(stateKey)) return;
-        stateDictionary.Add(stateKey, newState);
-        newState.stateKey = stateKey;
-    }
+        public void FixedUpdate()
+        {
+            currentState.FixedUpdate();
+        }
 
-    public string GetCurrentStateString() => currentState.stateKey.ToString();
+        public void TransitionToState(StateKey targetStateKey)
+        {
+            if (stateDictionary.TryGetValue(targetStateKey, out BaseState<StateKey, RunnerObject> targetState))
+            {
+                bool isTargetStateValid = targetState != null && targetState != currentState;
+                if (isTargetStateValid)
+                {
+                    StateKey previousStateKey = currentState != null ? currentState.stateKey : targetStateKey;
+                    currentState?.Exit();
+                    currentState = targetState;
+                    currentState.BaseEnter(previousStateKey);
+                    OnStateChanged?.Invoke(previousStateKey, currentState.stateKey);
+                    if (debugMode) Debug.Log(currentState.stateKey.ToString());
+                }
+            }
+        }
+
+        public void AddState(StateKey stateKey, BaseState<StateKey, RunnerObject> newState)
+        {
+            if (stateDictionary.ContainsKey(stateKey)) return;
+            stateDictionary.Add(stateKey, newState);
+            newState.stateKey = stateKey;
+        }
+
+        public StateKey GetCurrentState() => currentState.stateKey;
+        public string GetCurrentStateString() => currentState.stateKey.ToString();
+    }
 }
+

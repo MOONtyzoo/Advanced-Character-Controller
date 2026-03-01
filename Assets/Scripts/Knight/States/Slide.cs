@@ -1,8 +1,9 @@
 using UnityEngine;
+using StateMachine;
 
-namespace PlayerStates
+public partial class Knight
 {
-    public class Slide : BaseState<Knight.StateKey, Knight>
+    public class Slide : BaseState<StateKey, Knight>
     {
         public Slide(Knight runnerObject) : base(runnerObject) { }
 
@@ -10,10 +11,10 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            slideDirection = (runnerObject.horizontalInput != 0.0f) ? Mathf.Sign(runnerObject.horizontalInput) : Mathf.Sign(runnerObject.GetVelocityX());
-            runnerObject.SetVelocityX(slideDirection * runnerObject.slideSpeed);
+            slideDirection = (runnerObject.horizontalInput != 0.0f) ? Mathf.Sign(runnerObject.horizontalInput) : Mathf.Sign(runnerObject.rbody.linearVelocityX);
+            runnerObject.rbody.linearVelocityX = slideDirection * runnerObject.slideSpeed;
             runnerObject.FlipSpriteToFaceInputDirection();
-            runnerObject.GetAnimator().SetBool("is sliding", true);
+            runnerObject.animator.SetBool("is sliding", true);
         }
 
         public override void Update()
@@ -26,34 +27,34 @@ namespace PlayerStates
             runnerObject.MoveTowardsX(slideDirection * runnerObject.slideSpeed, runnerObject.runAccel);
         }
 
-        public override bool TryGetTransitions(out Knight.StateKey targetState)
+        public override bool TryGetTransitions(out StateKey targetState)
         {
             if (runnerObject.verticalInput >= 0.0f)
             {
-                targetState = Knight.StateKey.Run;
+                targetState = StateKey.Run;
                 return true;
             }
 
             if (runnerObject.jumpInput.WasPressed())
             {
                 runnerObject.Jump();
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
             if (!runnerObject.IsGrounded())
             {
-                targetState = Knight.StateKey.Aerial;
+                targetState = StateKey.Aerial;
                 return true;
             }
 
-            targetState = Knight.StateKey.Idle;
+            targetState = StateKey.Idle;
             return false;
         }
 
         public override void Exit()
         {
-            runnerObject.GetAnimator().SetBool("is sliding", false);
+            runnerObject.animator.SetBool("is sliding", false);
         }
     }
 }

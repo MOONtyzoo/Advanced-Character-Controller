@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using StateMachine;
 
 public partial class Knight : MonoBehaviour
 {
@@ -11,47 +12,47 @@ public partial class Knight : MonoBehaviour
     [SerializeField] private Transform rightWallRaycastPoint;
 
     [Header("Run")]
-    [SerializeField] public float runSpeed;
-    [SerializeField] public float runAccel;
+    [SerializeField] private float runSpeed;
+    [SerializeField] private float runAccel;
 
     [Header("Jump")]
-    [SerializeField] public float baseGravityScale;
-    [SerializeField] public float jumpSpeed;
+    [SerializeField] private float baseGravityScale;
+    [SerializeField] private float jumpSpeed;
 
     [Header("Crouch")]
-    [SerializeField] public float crouchSpeed;
-    [SerializeField] public float crouchAccel;
+    [SerializeField] private float crouchSpeed;
+    [SerializeField] private float crouchAccel;
 
     [Header("Slide")]
-    [SerializeField] public float slideSpeed;
+    [SerializeField] private float slideSpeed;
 
     [Header("Dodge")]
-    [SerializeField] public AnimationCurve dodgeSpeedCurve;
-    [SerializeField] public float dodgeStartSpeed;
-    [SerializeField] public float dodgeEndSpeed;
-    [SerializeField] public float dodgeDuration;
+    [SerializeField] private AnimationCurve dodgeSpeedCurve;
+    [SerializeField] private float dodgeStartSpeed;
+    [SerializeField] private float dodgeEndSpeed;
+    [SerializeField] private float dodgeDuration;
 
 
     [Header("Dive")]
-    [SerializeField] public float diveSpeed;
-    [SerializeField] public float diveUpVelocity;
+    [SerializeField] private float diveSpeed;
+    [SerializeField] private float diveUpVelocity;
 
     [Header("Roll")]
-    [SerializeField] public float rollSpeed;
-    [SerializeField] public float rollDuration;
+    [SerializeField] private float rollSpeed;
+    [SerializeField] private float rollDuration;
 
     [Header("Wall")]
-    [SerializeField] public float wallSlideSpeed;
-    [SerializeField] public float wallSlideAccel;
-    [SerializeField] public float wallJumpSpeed;
-    [SerializeField] public float wallJumpAngle;
+    [SerializeField] private float wallSlideSpeed;
+    [SerializeField] private float wallSlideAccel;
+    [SerializeField] private float wallJumpSpeed;
+    [SerializeField] private float wallJumpAngle;
 
     [Header("Attacks")]
-    [SerializeField] public float attackCombo1Duration;
-    [SerializeField] public float attackCombo1EndLag;
-    [SerializeField] public float attackCombo2Duration;
-    [SerializeField] public float attackCombo2EndLag;
-    [SerializeField] public float attackCrouchDuration;
+    [SerializeField] private float attackCombo1Duration;
+    [SerializeField] private float attackCombo1EndLag;
+    [SerializeField] private float attackCombo2Duration;
+    [SerializeField] private float attackCombo2EndLag;
+    [SerializeField] private float attackCrouchDuration;
 
     private Rigidbody2D rbody;
     private SpriteRenderer spriteRenderer;
@@ -71,11 +72,11 @@ public partial class Knight : MonoBehaviour
         Hurt, Die
     }
 
-    [HideInInspector] public float horizontalInput;
-    [HideInInspector] public float verticalInput;
-    [HideInInspector] public InputButton jumpInput = new InputButton("Jump", 0.2f);
-    [HideInInspector] public InputButton dodgeInput = new InputButton("Roll", 0.2f);
-    [HideInInspector] public InputButton attackInput = new InputButton("Attack", 0.2f);
+    private float horizontalInput;
+    private float verticalInput;
+    private readonly InputButton jumpInput = new("Jump", 0.2f);
+    private readonly InputButton dodgeInput = new("Roll", 0.2f);
+    private readonly InputButton attackInput = new("Attack", 0.2f);
 
     private RaycastHit2D groundRaycastHit;
     private RaycastHit2D leftWallRaycastHit;
@@ -91,51 +92,48 @@ public partial class Knight : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
-        SetUpStateMachine();
+        InitializeStateMachine();
     }
 
-    private void SetUpStateMachine()
+    private void InitializeStateMachine()
     {
         stateMachine = new StateMachine<StateKey, Knight>(debugMode);
 
 
-        BaseState<StateKey, Knight> idleState = new PlayerStates.Idle(this);
+        var idleState = new Idle(this);
         stateMachine.AddState(StateKey.Idle, idleState);
 
-        BaseState<StateKey, Knight> runState = new PlayerStates.Run(this);
+        var runState = new Run(this);
         stateMachine.AddState(StateKey.Run, runState);
 
-        BaseState<StateKey, Knight> crouchState = new PlayerStates.Crouch(this);
+        var crouchState = new Crouch(this);
         stateMachine.AddState(StateKey.Crouch, crouchState);
 
-        BaseState<StateKey, Knight> slideState = new PlayerStates.Slide(this);
+        var slideState = new Slide(this);
         stateMachine.AddState(StateKey.Slide, slideState);
 
-        BaseState<StateKey, Knight> dodgeState = new PlayerStates.Dodge(this);
+        var dodgeState = new Dodge(this);
         stateMachine.AddState(StateKey.Dodge, dodgeState);
 
-        BaseState<StateKey, Knight> rollState = new PlayerStates.Roll(this);
+        var rollState = new Roll(this);
         stateMachine.AddState(StateKey.Roll, rollState);
 
 
-        BaseState<StateKey, Knight> aerialState = new PlayerStates.Aerial(this);
+        var aerialState = new Aerial(this);
         stateMachine.AddState(StateKey.Aerial, aerialState);
 
-        BaseState<StateKey, Knight> airDiveState = new PlayerStates.AirDive(this);
+        var airDiveState = new AirDive(this);
         stateMachine.AddState(StateKey.AirDive, airDiveState);
 
 
-        BaseState<StateKey, Knight> wallSlideState = new PlayerStates.WallSlide(this);
+        var wallSlideState = new WallSlide(this);
         stateMachine.AddState(StateKey.WallSlide, wallSlideState);
 
-        BaseState<StateKey, Knight> ledgeHangState = new PlayerStates.LedgeHang(this);
-        stateMachine.AddState(StateKey.LedgeHang, ledgeHangState);
 
-
-        BaseState<StateKey, Knight> attackComboState = new PlayerStates.AttackCombo(this);
+        var attackComboState = new AttackCombo(this);
         stateMachine.AddState(StateKey.AttackCombo, attackComboState);
 
-        BaseState<StateKey, Knight> attackCrouchState = new PlayerStates.AttackCrouch(this);
+        var attackCrouchState = new AttackCrouch(this);
         stateMachine.AddState(StateKey.AttackCrouch, attackCrouchState);
 
 
@@ -179,21 +177,21 @@ public partial class Knight : MonoBehaviour
         animator.SetBool("is grounded", IsGrounded());
     }
 
-    public void MoveTowardsX(float targetVelocityX, float acceleration)
+    private void MoveTowardsX(float targetVelocityX, float acceleration)
     {
         // Faster acceleration if trying to turn in opposite direction or stopping
-        float accelFactor = Mathf.Sign(targetVelocityX) == Mathf.Sign(rbody.linearVelocityX) ? 1.0f : 2.0f;
+        float accelFactor = Mathf.Approximately(Mathf.Sign(targetVelocityX), Mathf.Sign(rbody.linearVelocityX)) ? 1.0f : 2.0f;
         rbody.linearVelocityX = Mathf.MoveTowards(rbody.linearVelocityX, targetVelocityX, accelFactor * acceleration * Time.deltaTime);
     }
 
-    public void MoveTowardsY(float targetVelocityY, float acceleration)
+    private void MoveTowardsY(float targetVelocityY, float acceleration)
     {
         // Faster acceleration if trying to turn in opposite direction or stopping
-        float accelFactor = Mathf.Sign(targetVelocityY) == Mathf.Sign(rbody.linearVelocityY) ? 1.0f : 2.0f;
+        float accelFactor = Mathf.Approximately(Mathf.Sign(targetVelocityY), Mathf.Sign(rbody.linearVelocityY)) ? 1.0f : 2.0f;
         rbody.linearVelocityY = Mathf.MoveTowards(rbody.linearVelocityY, targetVelocityY, accelFactor * acceleration * Time.deltaTime);
     }
 
-    public void Jump()
+    private void Jump()
     {
         rbody.linearVelocityY = jumpSpeed;
         animator.SetTrigger("jump");
@@ -201,7 +199,7 @@ public partial class Knight : MonoBehaviour
         timeSinceLastJump = 0.0f;
     }
 
-    public void WallJump()
+    private void WallJump()
     {
         Vector2 velocityVector;
         velocityVector.x = wallJumpSpeed * Mathf.Cos(Mathf.Deg2Rad * wallJumpAngle);
@@ -212,46 +210,34 @@ public partial class Knight : MonoBehaviour
         timeSinceLastJump = 0.0f;
     }
 
-    public Animator GetAnimator() => animator;
-
-    public bool IsFacingLeft() => spriteRenderer.flipX;
-    public bool IsFacingRight() => !spriteRenderer.flipX;
-    public float GetFacingDirection() => spriteRenderer.flipX ? -1.0f : 1.0f;
-    public bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
+    private bool IsFacingLeft() => spriteRenderer.flipX;
+    private bool IsFacingRight() => !spriteRenderer.flipX;
+    private float GetFacingDirection() => spriteRenderer.flipX ? -1.0f : 1.0f;
+    private bool WantsToTurn() => (horizontalInput < 0.0f && IsFacingRight())
                 || (horizontalInput > 0.0f && IsFacingLeft());
-    public void FlipSprite(bool facingLeft) => spriteRenderer.flipX = facingLeft;
-    public void FlipSpriteToFaceInputDirection()
+    private void FlipSprite(bool facingLeft) => spriteRenderer.flipX = facingLeft;
+    private void FlipSpriteToFaceInputDirection()
     {
         if (horizontalInput == 0.0f) return;
         spriteRenderer.flipX = horizontalInput < 0.0f;
     }
 
-    public Vector2 GetVelocity() => rbody.linearVelocity;
-    public float GetVelocityX() => rbody.linearVelocityX;
-    public void SetVelocityX(float newVelocityX) => rbody.linearVelocityX = newVelocityX;
-    public float GetVelocityY() => rbody.linearVelocityY;
-    public void SetVelocityY(float newVelocityY) => rbody.linearVelocityY = newVelocityY;
-    public void SetGravityScale(float newGravityScale) => rbody.gravityScale = newGravityScale;
-
-    public bool IsGrounded() => groundRaycastHit && rbody.linearVelocityY <= 0.5f;
-    public bool IsFalling() => !IsGrounded() && rbody.linearVelocityY < 0.0f;
-    public bool IsWallToLeft() => leftWallRaycastHit;
-    public bool IsWallToRight() => rightWallRaycastHit;
-    public bool IsInputtingTowardsWall()
+    private bool IsGrounded() => groundRaycastHit && rbody.linearVelocityY <= 0.5f;
+    private bool IsFalling() => !IsGrounded() && rbody.linearVelocityY < 0.0f;
+    private bool IsWallToLeft() => leftWallRaycastHit;
+    private bool IsWallToRight() => rightWallRaycastHit;
+    private bool IsInputtingTowardsWall()
     {
         if (IsWallToLeft()) { return horizontalInput < 0.0f; }
-        else if (IsWallToRight()) { return horizontalInput > 0.0f; }
-        else { return false; }
+        if (IsWallToRight()) { return horizontalInput > 0.0f; }
+        return false;
     }
-    public void SnapToWall()
+    private void SnapToWall()
     {
         RaycastHit2D hit = IsWallToLeft() ? leftWallRaycastHit : rightWallRaycastHit;
         Vector2 wallOffset = transform.position - (IsWallToLeft() ? leftWallRaycastPoint.position : rightWallRaycastPoint.position);
         rbody.MovePosition(hit.point + wallOffset);
     }
-
-    public float GetTimeSinceLastJump() => timeSinceLastJump;
     
-
     public string GetCurrentStateString() => stateMachine.GetCurrentStateString();
 }
