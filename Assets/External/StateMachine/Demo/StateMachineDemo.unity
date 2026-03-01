@@ -46724,73 +46724,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &1739663278
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1739663280}
-  - component: {fileID: 1739663279}
-  m_Layer: 0
-  m_Name: TODO
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1739663279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739663278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb680ef8fb6b99646bc03bb0f6b6518d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  todoList:
-  - Crouch
-  - Attack (1-2 combo)
-  - Attack (Crouch attack)
-  - 'Rolling (Shift)
-
-    Dash with Immunity frames
-
-'
-  - Sliding (Ctrl)
-  - Diving (Shift while aerial)
-  - "Adjust speed of \"TurnAround\" animation to \nmatch the amount of time it would
-    take to turn around."
-  - Should only turn if there is a mismatch with facing direction for a certain amount
-    of time (like 0.25s) rather than instant
-  - Wall sliding, wall jumps
-  - Wall hanging, wall vaulting
-  - Basic monsters to deal damage and hit
-  - Hitboxes on attacks to kill monsters
-  - Hit and death animations
-  - Sound effects / music
-  - Particle effects
-  - Experiment with squash & stretch on all animations
---- !u!4 &1739663280
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739663278}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1763116281
 GameObject:
   m_ObjectHideFlags: 0
@@ -48403,7 +48336,6 @@ SpriteRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1739663280}
   - {fileID: 519420032}
   - {fileID: 1956647725}
   - {fileID: 1499501745}
